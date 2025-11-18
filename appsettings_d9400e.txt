@@ -1,0 +1,17 @@
+[
+  {
+    "name": "AZURE_STORAGE_ACCOUNT",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "AZURE_STORAGE_KEY",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "CSV_CONTAINER",
+    "slotSetting": false,
+    "value": null
+  }
+]

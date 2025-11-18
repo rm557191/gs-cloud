@@ -1,0 +1,90 @@
++ set -euo pipefail
++ resourceGroupNamex=rg_gscloud
++ locationx=eastus
++ vmnamex=vm_gscloud
++ adminUserx=nyc_ju
++ adminPasswordx='SenhaForte123!'
++ vmsizex=Standard_B1ms
++ planSku=B1
++ webAppName=WebAppGSCloud
++ planName=WebAppGSCloud-plan
+++ date +%s
+++ sha256sum
+++ head -c6
++ STORAGE_ACCOUNT=stggscloud38f910
++ containerName=csvfiles
++ echo '1) Criando Resource Group: rg_gscloud (location: eastus)'
+1) Criando Resource Group: rg_gscloud (location: eastus)
++ az group create --name rg_gscloud --location eastus
+{
+  "id": "/subscriptions/41f279d7-d9ef-4393-ad17-a167299d760d/resourceGroups/rg_gscloud",
+  "location": "eastus",
+  "managedBy": null,
+  "name": "rg_gscloud",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
++ echo '2) Criando VM: vm_gscloud (tamanho: Standard_B1ms) - usuário: nyc_ju'
+2) Criando VM: vm_gscloud (tamanho: Standard_B1ms) - usuário: nyc_ju
++ az vm create --resource-group rg_gscloud --name vm_gscloud --image Ubuntu2204 --size Standard_B1ms --location eastus --admin-username nyc_ju --admin-password 'SenhaForte123!' --public-ip-sku Standard
+WARNING: The default value of '--size' will be changed to 'Standard_D2s_v5' from 'Standard_DS1_v2' in a future release.
+{
+  "fqdns": "",
+  "id": "/subscriptions/41f279d7-d9ef-4393-ad17-a167299d760d/resourceGroups/rg_gscloud/providers/Microsoft.Compute/virtualMachines/vm_gscloud",
+  "location": "eastus",
+  "macAddress": "00-0D-3A-57-50-74",
+  "powerState": "VM running",
+  "privateIpAddress": "10.0.0.4",
+  "publicIpAddress": "172.172.151.255",
+  "resourceGroup": "rg_gscloud"
+}
++ echo '3) Garantindo tamanho da VM (resize se necessário)'
+3) Garantindo tamanho da VM (resize se necessário)
++ az vm resize -g rg_gscloud -n vm_gscloud --size Standard_B1ms
+WARNING: VM is already Standard_B1ms
++ echo '4) Criando App Service Plan: WebAppGSCloud-plan (sku B1)'
+4) Criando App Service Plan: WebAppGSCloud-plan (sku B1)
++ az appservice plan create --name WebAppGSCloud-plan --resource-group rg_gscloud --location eastus --is-linux --sku B1
+{
+  "asyncScalingEnabled": false,
+  "elasticScaleEnabled": false,
+  "freeOfferExpirationTime": "2026-05-18T18:49:57.58",
+  "geoRegion": "East US",
+  "hyperV": false,
+  "id": "/subscriptions/41f279d7-d9ef-4393-ad17-a167299d760d/resourceGroups/rg_gscloud/providers/Microsoft.Web/serverfarms/WebAppGSCloud-plan",
+  "isCustomMode": false,
+  "isSpot": false,
+  "isXenon": false,
+  "kind": "linux",
+  "location": "eastus",
+  "maximumElasticWorkerCount": 1,
+  "maximumNumberOfWorkers": 0,
+  "name": "WebAppGSCloud-plan",
+  "numberOfSites": 0,
+  "numberOfWorkers": 1,
+  "perSiteScaling": false,
+  "provisioningState": "Succeeded",
+  "reserved": true,
+  "resourceGroup": "rg_gscloud",
+  "sku": {
+    "capacity": 1,
+    "family": "B",
+    "name": "B1",
+    "size": "B1",
+    "tier": "Basic"
+  },
+  "status": "Ready",
+  "subscription": "41f279d7-d9ef-4393-ad17-a167299d760d",
+  "targetWorkerCount": 0,
+  "targetWorkerSizeId": 0,
+  "type": "Microsoft.Web/serverfarms",
+  "zoneRedundant": false
+}
++ echo '5) Criando WebApp: WebAppGSCloud (Python 3.12)'
+5) Criando WebApp: WebAppGSCloud (Python 3.12)
++ az webapp create --resource-group rg_gscloud --plan WebAppGSCloud-plan --name WebAppGSCloud --runtime 'PYTHON|3.12'
+WARNING: Webapp 'WebAppGSCloud' already exists. The command will use the existing app's settings.
+ERROR: Unable to retrieve details of the existing app 'WebAppGSCloud'. Please check that the app is a part of the current subscription. If creating a new app, app names must be globally unique. Please try a more unique name

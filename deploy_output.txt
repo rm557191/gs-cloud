@@ -1,0 +1,4 @@
+WARNING: Initiating deployment
+WARNING: Deploying from local path: /mnt/c/Users/izida/projetos/gs_cloud/app_package.zip
+WARNING: Warming up Kudu before deployment.
+WARNING: Warmed up Kudu instance successfully.
